@@ -1,36 +1,130 @@
-import React, { memo, useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import ArticleList from './ArticleList';
-import {
-  getArticlesByAuthor,
-  getFavoriteArticles,
-} from '../reducers/articleList';
-import {
-  follow,
-  unfollow,
-  getProfile,
-  profilePageUnloaded,
-} from '../reducers/profile';
-import { selectUser } from '../features/auth/authSlice';
+'use strict';
 
+function _typeof(obj) {
+  '@babel/helpers - typeof';
+
+  return (
+    (_typeof =
+      'function' == typeof Symbol && 'symbol' == typeof Symbol.iterator
+        ? function (obj) {
+            return typeof obj;
+          }
+        : function (obj) {
+            return obj &&
+              'function' == typeof Symbol &&
+              obj.constructor === Symbol &&
+              obj !== Symbol.prototype
+              ? 'symbol'
+              : typeof obj;
+          }),
+    _typeof(obj)
+  );
+}
+
+Object.defineProperty(exports, '__esModule', {
+  value: true,
+});
+exports.default = void 0;
+
+var _react = _interopRequireWildcard(require('react'));
+
+var _reactRouterDom = require('react-router-dom');
+
+var _reactRedux = require('react-redux');
+
+var _ArticleList = _interopRequireDefault(require('./ArticleList'));
+
+var _articleList = require('../reducers/articleList');
+
+var _profile = require('../reducers/profile');
+
+var _authSlice = require('../features/auth/authSlice');
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule
+    ? obj
+    : {
+        default: obj,
+      };
+}
+
+function _getRequireWildcardCache(nodeInterop) {
+  if (typeof WeakMap !== 'function') return null;
+  var cacheBabelInterop = new WeakMap();
+  var cacheNodeInterop = new WeakMap();
+  return (_getRequireWildcardCache = function _getRequireWildcardCache(
+    nodeInterop
+  ) {
+    return nodeInterop ? cacheNodeInterop : cacheBabelInterop;
+  })(nodeInterop);
+}
+
+function _interopRequireWildcard(obj, nodeInterop) {
+  if (!nodeInterop && obj && obj.__esModule) {
+    return obj;
+  }
+
+  if (
+    obj === null ||
+    (_typeof(obj) !== 'object' && typeof obj !== 'function')
+  ) {
+    return {
+      default: obj,
+    };
+  }
+
+  var cache = _getRequireWildcardCache(nodeInterop);
+
+  if (cache && cache.has(obj)) {
+    return cache.get(obj);
+  }
+
+  var newObj = {};
+  var hasPropertyDescriptor =
+    Object.defineProperty && Object.getOwnPropertyDescriptor;
+
+  for (var key in obj) {
+    if (key !== 'default' && Object.prototype.hasOwnProperty.call(obj, key)) {
+      var desc = hasPropertyDescriptor
+        ? Object.getOwnPropertyDescriptor(obj, key)
+        : null;
+
+      if (desc && (desc.get || desc.set)) {
+        Object.defineProperty(newObj, key, desc);
+      } else {
+        newObj[key] = obj[key];
+      }
+    }
+  }
+
+  newObj.default = obj;
+
+  if (cache) {
+    cache.set(obj, newObj);
+  }
+
+  return newObj;
+}
 /**
  * Go to profile settings
  *
  * @example
  * <EditProfileSettings />
  */
+
 function EditProfileSettings() {
-  return (
-    <Link
-      to="/settings"
-      className="btn btn-sm btn-outline-secondary action-btn"
-    >
-      <i className="ion-gear-a" /> Edit Profile Settings
-    </Link>
+  return /*#__PURE__*/ _react.default.createElement(
+    _reactRouterDom.Link,
+    {
+      to: '/settings',
+      className: 'btn btn-sm btn-outline-secondary action-btn',
+    },
+    /*#__PURE__*/ _react.default.createElement('i', {
+      className: 'ion-gear-a',
+    }),
+    ' Edit Profile Settings'
   );
 }
-
 /**
  * Follow or unfollow an user
  *
@@ -40,43 +134,50 @@ function EditProfileSettings() {
  * @example
  * <FollowUserButton username="warren_boyd" following />
  */
-function FollowUserButton({ username, following }) {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const currentUser = useSelector(selectUser);
-  let classes = 'btn btn-sm action-btn';
-  let textMessage;
+
+function FollowUserButton(_ref) {
+  var username = _ref.username,
+    following = _ref.following;
+  var navigate = (0, _reactRouterDom.useNavigate)();
+  var dispatch = (0, _reactRedux.useDispatch)();
+  var currentUser = (0, _reactRedux.useSelector)(_authSlice.selectUser);
+  var classes = 'btn btn-sm action-btn';
+  var textMessage;
 
   if (following) {
     classes += ' btn-secondary';
-    textMessage = `Unfollow ${username}`;
+    textMessage = 'Unfollow '.concat(username);
   } else {
     classes += ' btn-outline-secondary';
-    textMessage = `Follow ${username}`;
+    textMessage = 'Follow '.concat(username);
   }
 
-  const handleClick = () => {
+  var handleClick = function handleClick() {
     if (!currentUser) {
-      navigate.push(`/register?redirectTo=${location.pathname}`);
+      navigate.push('/register?redirectTo='.concat(location.pathname));
       return;
     }
 
     if (following) {
-      dispatch(unfollow(username));
+      dispatch((0, _profile.unfollow)(username));
     } else {
-      dispatch(follow(username));
+      dispatch((0, _profile.follow)(username));
     }
   };
 
-  return (
-    <button className={classes} onClick={handleClick}>
-      <i className="ion-plus-round" />
-      &nbsp;
-      {textMessage}
-    </button>
+  return /*#__PURE__*/ _react.default.createElement(
+    'button',
+    {
+      className: classes,
+      onClick: handleClick,
+    },
+    /*#__PURE__*/ _react.default.createElement('i', {
+      className: 'ion-plus-round',
+    }),
+    '\xA0',
+    textMessage
   );
 }
-
 /**
  * Show the profile of an user
  *
@@ -92,41 +193,62 @@ function FollowUserButton({ username, following }) {
  *    }}
  * />
  */
-function UserInfo({ profile }) {
-  const currentUser = useSelector(selectUser);
-  const isCurrentUser = profile.username === currentUser?.username;
 
-  return (
-    <div className="user-info">
-      <div className="container">
-        <div className="row">
-          <div className="col-xs-12 col-md-10 offset-md-1">
-            <img
-              src={
-                profile.image ||
-                'https://static.productionready.io/images/smiley-cyrus.jpg'
-              }
-              className="user-img"
-              alt={profile.username}
-            />
-            <h4>{profile.username}</h4>
-            <p>{profile.bio}</p>
-
-            {isCurrentUser ? (
-              <EditProfileSettings />
-            ) : (
-              <FollowUserButton
-                username={profile.username}
-                following={profile.following}
-              />
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
+function UserInfo(_ref2) {
+  var profile = _ref2.profile;
+  var currentUser = (0, _reactRedux.useSelector)(_authSlice.selectUser);
+  var isCurrentUser =
+    profile.username ===
+    (currentUser === null || currentUser === void 0
+      ? void 0
+      : currentUser.username);
+  return /*#__PURE__*/ _react.default.createElement(
+    'div',
+    {
+      className: 'user-info',
+    },
+    /*#__PURE__*/ _react.default.createElement(
+      'div',
+      {
+        className: 'container',
+      },
+      /*#__PURE__*/ _react.default.createElement(
+        'div',
+        {
+          className: 'row',
+        },
+        /*#__PURE__*/ _react.default.createElement(
+          'div',
+          {
+            className: 'col-xs-12 col-md-10 offset-md-1',
+          },
+          /*#__PURE__*/ _react.default.createElement('img', {
+            src:
+              profile.image ||
+              'https://static.productionready.io/images/smiley-cyrus.jpg',
+            className: 'user-img',
+            alt: profile.username,
+          }),
+          /*#__PURE__*/ _react.default.createElement(
+            'h4',
+            null,
+            profile.username
+          ),
+          /*#__PURE__*/ _react.default.createElement('p', null, profile.bio),
+          isCurrentUser
+            ? /*#__PURE__*/ _react.default.createElement(
+                EditProfileSettings,
+                null
+              )
+            : /*#__PURE__*/ _react.default.createElement(FollowUserButton, {
+                username: profile.username,
+                following: profile.following,
+              })
+        )
+      )
+    )
   );
 }
-
 /**
  * Profile's navigation
  *
@@ -136,81 +258,132 @@ function UserInfo({ profile }) {
  * @example
  * <ProfileTabs username="warren_boyd" isFavorites />
  */
-function ProfileTabs({ username, isFavorites }) {
-  return (
-    <div className="articles-toggle">
-      <ul className="nav nav-pills outline-active">
-        <li className="nav-item">
-          <Link
-            className={isFavorites ? 'nav-link' : 'nav-link active'}
-            to={`/@${username}`}
-          >
-            My Articles
-          </Link>
-        </li>
 
-        <li className="nav-item">
-          <Link
-            className={isFavorites ? 'nav-link active' : 'nav-link'}
-            to={`/@${username}/favorites`}
-          >
-            Favorited Articles
-          </Link>
-        </li>
-      </ul>
-    </div>
+function ProfileTabs(_ref3) {
+  var username = _ref3.username,
+    isFavorites = _ref3.isFavorites;
+  return /*#__PURE__*/ _react.default.createElement(
+    'div',
+    {
+      className: 'articles-toggle',
+    },
+    /*#__PURE__*/ _react.default.createElement(
+      'ul',
+      {
+        className: 'nav nav-pills outline-active',
+      },
+      /*#__PURE__*/ _react.default.createElement(
+        'li',
+        {
+          className: 'nav-item',
+        },
+        /*#__PURE__*/ _react.default.createElement(
+          _reactRouterDom.Link,
+          {
+            className: isFavorites ? 'nav-link' : 'nav-link active',
+            to: '/@'.concat(username),
+          },
+          'My Articles'
+        )
+      ),
+      /*#__PURE__*/ _react.default.createElement(
+        'li',
+        {
+          className: 'nav-item',
+        },
+        /*#__PURE__*/ _react.default.createElement(
+          _reactRouterDom.Link,
+          {
+            className: isFavorites ? 'nav-link active' : 'nav-link',
+            to: '/@'.concat(username, '/favorites'),
+          },
+          'Favorited Articles'
+        )
+      )
+    )
   );
 }
-
 /**
  * Profile screen component
  * @param {import('react-router-dom').RouteComponentProps<{ username: string }>} props
  * @example
  * <Profile />
  */
-function Profile({ location, isFavoritePage }) {
-  const dispatch = useDispatch();
-  const profile = useSelector((state) => state.profile);
-  const { username } = useParams();
 
-  useEffect(() => {
-    const fetchProfile = dispatch(getProfile(username));
-    const fetchArticles = dispatch(
-      isFavoritePage
-        ? getFavoriteArticles({ username })
-        : getArticlesByAuthor({ author: username })
-    );
+function Profile(_ref4) {
+  var location = _ref4.location,
+    isFavoritePage = _ref4.isFavoritePage;
+  var dispatch = (0, _reactRedux.useDispatch)();
+  var profile = (0, _reactRedux.useSelector)(function (state) {
+    return state.profile;
+  });
 
-    return () => {
-      fetchProfile.abort();
-      fetchArticles.abort();
+  var _useParams = (0, _reactRouterDom.useParams)(),
+    username = _useParams.username;
+
+  (0, _react.useEffect)(
+    function () {
+      var fetchProfile = dispatch((0, _profile.getProfile)(username));
+      var fetchArticles = dispatch(
+        isFavoritePage
+          ? (0, _articleList.getFavoriteArticles)({
+              username: username,
+            })
+          : (0, _articleList.getArticlesByAuthor)({
+              author: username,
+            })
+      );
+      return function () {
+        fetchProfile.abort();
+        fetchArticles.abort();
+      };
+    },
+    [username, isFavoritePage]
+  );
+  (0, _react.useEffect)(function () {
+    return function () {
+      return dispatch((0, _profile.profilePageUnloaded)());
     };
-  }, [username, isFavoritePage]);
-
-  useEffect(() => () => dispatch(profilePageUnloaded()), []);
+  }, []);
 
   if (!profile) {
     return null;
   }
 
-  return (
-    <div className="profile-page">
-      <UserInfo profile={profile} />
-
-      <div className="container page">
-        <div className="row">
-          <div className="col-xs-12 col-md-10 offset-md-1">
-            <ProfileTabs
-              username={profile.username}
-              isFavorites={isFavoritePage}
-            />
-
-            <ArticleList />
-          </div>
-        </div>
-      </div>
-    </div>
+  return /*#__PURE__*/ _react.default.createElement(
+    'div',
+    {
+      className: 'profile-page',
+    },
+    /*#__PURE__*/ _react.default.createElement(UserInfo, {
+      profile: profile,
+    }),
+    /*#__PURE__*/ _react.default.createElement(
+      'div',
+      {
+        className: 'container page',
+      },
+      /*#__PURE__*/ _react.default.createElement(
+        'div',
+        {
+          className: 'row',
+        },
+        /*#__PURE__*/ _react.default.createElement(
+          'div',
+          {
+            className: 'col-xs-12 col-md-10 offset-md-1',
+          },
+          /*#__PURE__*/ _react.default.createElement(ProfileTabs, {
+            username: profile.username,
+            isFavorites: isFavoritePage,
+          }),
+          /*#__PURE__*/ _react.default.createElement(_ArticleList.default, null)
+        )
+      )
+    )
   );
 }
 
-export default memo(Profile);
+var _default = (0, _react.memo)(Profile);
+
+exports.default = _default;

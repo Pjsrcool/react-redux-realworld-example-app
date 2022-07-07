@@ -1,13 +1,109 @@
-import React, { memo } from 'react';
-import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+'use strict';
 
-import { favoriteArticle, unfavoriteArticle } from '../reducers/articleList';
-import TagsList from '../features/tags/TagsList';
+function _typeof(obj) {
+  '@babel/helpers - typeof';
 
-const FAVORITED_CLASS = 'btn btn-sm btn-primary';
-const NOT_FAVORITED_CLASS = 'btn btn-sm btn-outline-primary';
+  return (
+    (_typeof =
+      'function' == typeof Symbol && 'symbol' == typeof Symbol.iterator
+        ? function (obj) {
+            return typeof obj;
+          }
+        : function (obj) {
+            return obj &&
+              'function' == typeof Symbol &&
+              obj.constructor === Symbol &&
+              obj !== Symbol.prototype
+              ? 'symbol'
+              : typeof obj;
+          }),
+    _typeof(obj)
+  );
+}
 
+Object.defineProperty(exports, '__esModule', {
+  value: true,
+});
+exports.default = void 0;
+
+var _react = _interopRequireWildcard(require('react'));
+
+var _reactRouterDom = require('react-router-dom');
+
+var _reactRedux = require('react-redux');
+
+var _articleList = require('../reducers/articleList');
+
+var _TagsList = _interopRequireDefault(require('../features/tags/TagsList'));
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule
+    ? obj
+    : {
+        default: obj,
+      };
+}
+
+function _getRequireWildcardCache(nodeInterop) {
+  if (typeof WeakMap !== 'function') return null;
+  var cacheBabelInterop = new WeakMap();
+  var cacheNodeInterop = new WeakMap();
+  return (_getRequireWildcardCache = function _getRequireWildcardCache(
+    nodeInterop
+  ) {
+    return nodeInterop ? cacheNodeInterop : cacheBabelInterop;
+  })(nodeInterop);
+}
+
+function _interopRequireWildcard(obj, nodeInterop) {
+  if (!nodeInterop && obj && obj.__esModule) {
+    return obj;
+  }
+
+  if (
+    obj === null ||
+    (_typeof(obj) !== 'object' && typeof obj !== 'function')
+  ) {
+    return {
+      default: obj,
+    };
+  }
+
+  var cache = _getRequireWildcardCache(nodeInterop);
+
+  if (cache && cache.has(obj)) {
+    return cache.get(obj);
+  }
+
+  var newObj = {};
+  var hasPropertyDescriptor =
+    Object.defineProperty && Object.getOwnPropertyDescriptor;
+
+  for (var key in obj) {
+    if (key !== 'default' && Object.prototype.hasOwnProperty.call(obj, key)) {
+      var desc = hasPropertyDescriptor
+        ? Object.getOwnPropertyDescriptor(obj, key)
+        : null;
+
+      if (desc && (desc.get || desc.set)) {
+        Object.defineProperty(newObj, key, desc);
+      } else {
+        newObj[key] = obj[key];
+      }
+    }
+  }
+
+  newObj.default = obj;
+
+  if (cache) {
+    cache.set(obj, newObj);
+  }
+
+  return newObj;
+}
+
+var FAVORITED_CLASS = 'btn btn-sm btn-primary';
+var NOT_FAVORITED_CLASS = 'btn btn-sm btn-outline-primary';
 /**
  * Show a preview of an article
  *
@@ -34,59 +130,107 @@ const NOT_FAVORITED_CLASS = 'btn btn-sm btn-outline-primary';
  *    }}
  * />
  */
-function ArticlePreview({ article }) {
-  const dispatch = useDispatch();
-  const favoriteButtonClass = article.favorited
+
+function ArticlePreview(_ref) {
+  var article = _ref.article;
+  var dispatch = (0, _reactRedux.useDispatch)();
+  var favoriteButtonClass = article.favorited
     ? FAVORITED_CLASS
     : NOT_FAVORITED_CLASS;
 
-  const handleClick = (event) => {
+  var handleClick = function handleClick(event) {
     event.preventDefault();
 
     if (article.favorited) {
-      dispatch(unfavoriteArticle(article.slug));
+      dispatch((0, _articleList.unfavoriteArticle)(article.slug));
     } else {
-      dispatch(favoriteArticle(article.slug));
+      dispatch((0, _articleList.favoriteArticle)(article.slug));
     }
   };
 
-  return (
-    <div className="article-preview">
-      <div className="article-meta">
-        <Link to={`/@${article.author.username}`}>
-          <img
-            src={
-              article.author.image ||
-              'https://static.productionready.io/images/smiley-cyrus.jpg'
-            }
-            alt={article.author.username}
-          />
-        </Link>
-
-        <div className="info">
-          <Link className="author" to={`/@${article.author.username}`}>
-            {article.author.username}
-          </Link>
-          <time className="date" dateTime={article.createdAt}>
-            {new Date(article.createdAt).toDateString()}
-          </time>
-        </div>
-
-        <div className="pull-xs-right">
-          <button className={favoriteButtonClass} onClick={handleClick}>
-            <i className="ion-heart" /> {article.favoritesCount}
-          </button>
-        </div>
-      </div>
-
-      <Link to={`/article/${article.slug}`} className="preview-link">
-        <h1>{article.title}</h1>
-        <p>{article.description}</p>
-        <span>Read more...</span>
-        <TagsList tags={article.tagList} />
-      </Link>
-    </div>
+  return /*#__PURE__*/ _react.default.createElement(
+    'div',
+    {
+      className: 'article-preview',
+    },
+    /*#__PURE__*/ _react.default.createElement(
+      'div',
+      {
+        className: 'article-meta',
+      },
+      /*#__PURE__*/ _react.default.createElement(
+        _reactRouterDom.Link,
+        {
+          to: '/@'.concat(article.author.username),
+        },
+        /*#__PURE__*/ _react.default.createElement('img', {
+          src:
+            article.author.image ||
+            'https://static.productionready.io/images/smiley-cyrus.jpg',
+          alt: article.author.username,
+        })
+      ),
+      /*#__PURE__*/ _react.default.createElement(
+        'div',
+        {
+          className: 'info',
+        },
+        /*#__PURE__*/ _react.default.createElement(
+          _reactRouterDom.Link,
+          {
+            className: 'author',
+            to: '/@'.concat(article.author.username),
+          },
+          article.author.username
+        ),
+        /*#__PURE__*/ _react.default.createElement(
+          'time',
+          {
+            className: 'date',
+            dateTime: article.createdAt,
+          },
+          new Date(article.createdAt).toDateString()
+        )
+      ),
+      /*#__PURE__*/ _react.default.createElement(
+        'div',
+        {
+          className: 'pull-xs-right',
+        },
+        /*#__PURE__*/ _react.default.createElement(
+          'button',
+          {
+            className: favoriteButtonClass,
+            onClick: handleClick,
+          },
+          /*#__PURE__*/ _react.default.createElement('i', {
+            className: 'ion-heart',
+          }),
+          ' ',
+          article.favoritesCount
+        )
+      )
+    ),
+    /*#__PURE__*/ _react.default.createElement(
+      _reactRouterDom.Link,
+      {
+        to: '/article/'.concat(article.slug),
+        className: 'preview-link',
+      },
+      /*#__PURE__*/ _react.default.createElement('h1', null, article.title),
+      /*#__PURE__*/ _react.default.createElement(
+        'p',
+        null,
+        article.description
+      ),
+      /*#__PURE__*/ _react.default.createElement('span', null, 'Read more...'),
+      /*#__PURE__*/ _react.default.createElement(_TagsList.default, {
+        tags: article.tagList,
+      })
+    )
   );
 }
 
-export default memo(ArticlePreview);
+var _default = (0, _react.memo)(ArticlePreview);
+
+exports.default = _default;

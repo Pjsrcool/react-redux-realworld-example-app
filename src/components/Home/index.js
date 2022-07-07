@@ -1,47 +1,161 @@
-import React, { memo, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+'use strict';
 
-import { changeTab, homePageUnloaded } from '../../reducers/articleList';
-import Banner from './Banner';
-import MainView from './MainView';
-import TagsSidebar from '../../features/tags/TagsSidebar';
-import { selectIsAuthenticated } from '../../features/auth/authSlice';
+function _typeof(obj) {
+  '@babel/helpers - typeof';
 
+  return (
+    (_typeof =
+      'function' == typeof Symbol && 'symbol' == typeof Symbol.iterator
+        ? function (obj) {
+            return typeof obj;
+          }
+        : function (obj) {
+            return obj &&
+              'function' == typeof Symbol &&
+              obj.constructor === Symbol &&
+              obj !== Symbol.prototype
+              ? 'symbol'
+              : typeof obj;
+          }),
+    _typeof(obj)
+  );
+}
+
+Object.defineProperty(exports, '__esModule', {
+  value: true,
+});
+exports.default = void 0;
+
+var _react = _interopRequireWildcard(require('react'));
+
+var _reactRedux = require('react-redux');
+
+var _articleList = require('../../reducers/articleList');
+
+var _Banner = _interopRequireDefault(require('./Banner'));
+
+var _MainView = _interopRequireDefault(require('./MainView'));
+
+var _TagsSidebar = _interopRequireDefault(
+  require('../../features/tags/TagsSidebar')
+);
+
+var _authSlice = require('../../features/auth/authSlice');
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule
+    ? obj
+    : {
+        default: obj,
+      };
+}
+
+function _getRequireWildcardCache(nodeInterop) {
+  if (typeof WeakMap !== 'function') return null;
+  var cacheBabelInterop = new WeakMap();
+  var cacheNodeInterop = new WeakMap();
+  return (_getRequireWildcardCache = function _getRequireWildcardCache(
+    nodeInterop
+  ) {
+    return nodeInterop ? cacheNodeInterop : cacheBabelInterop;
+  })(nodeInterop);
+}
+
+function _interopRequireWildcard(obj, nodeInterop) {
+  if (!nodeInterop && obj && obj.__esModule) {
+    return obj;
+  }
+
+  if (
+    obj === null ||
+    (_typeof(obj) !== 'object' && typeof obj !== 'function')
+  ) {
+    return {
+      default: obj,
+    };
+  }
+
+  var cache = _getRequireWildcardCache(nodeInterop);
+
+  if (cache && cache.has(obj)) {
+    return cache.get(obj);
+  }
+
+  var newObj = {};
+  var hasPropertyDescriptor =
+    Object.defineProperty && Object.getOwnPropertyDescriptor;
+
+  for (var key in obj) {
+    if (key !== 'default' && Object.prototype.hasOwnProperty.call(obj, key)) {
+      var desc = hasPropertyDescriptor
+        ? Object.getOwnPropertyDescriptor(obj, key)
+        : null;
+
+      if (desc && (desc.get || desc.set)) {
+        Object.defineProperty(newObj, key, desc);
+      } else {
+        newObj[key] = obj[key];
+      }
+    }
+  }
+
+  newObj.default = obj;
+
+  if (cache) {
+    cache.set(obj, newObj);
+  }
+
+  return newObj;
+}
 /**
  * Home screen component
  *
  * @example
  * <Home />
  */
+
 function Home() {
-  const dispatch = useDispatch();
-  const isAuthenticated = useSelector(selectIsAuthenticated);
-
-  useEffect(() => {
-    const defaultTab = isAuthenticated ? 'feed' : 'all';
-    const fetchArticles = dispatch(changeTab(defaultTab));
-
-    return () => {
-      dispatch(homePageUnloaded());
+  var dispatch = (0, _reactRedux.useDispatch)();
+  var isAuthenticated = (0, _reactRedux.useSelector)(
+    _authSlice.selectIsAuthenticated
+  );
+  (0, _react.useEffect)(function () {
+    var defaultTab = isAuthenticated ? 'feed' : 'all';
+    var fetchArticles = dispatch((0, _articleList.changeTab)(defaultTab));
+    return function () {
+      dispatch((0, _articleList.homePageUnloaded)());
       fetchArticles.abort();
     };
   }, []);
-
-  return (
-    <div className="home-page">
-      <Banner />
-
-      <div className="container page">
-        <div className="row">
-          <MainView />
-
-          <div className="col-md-3">
-            <TagsSidebar />
-          </div>
-        </div>
-      </div>
-    </div>
+  return /*#__PURE__*/ _react.default.createElement(
+    'div',
+    {
+      className: 'home-page',
+    },
+    /*#__PURE__*/ _react.default.createElement(_Banner.default, null),
+    /*#__PURE__*/ _react.default.createElement(
+      'div',
+      {
+        className: 'container page',
+      },
+      /*#__PURE__*/ _react.default.createElement(
+        'div',
+        {
+          className: 'row',
+        },
+        /*#__PURE__*/ _react.default.createElement(_MainView.default, null),
+        /*#__PURE__*/ _react.default.createElement(
+          'div',
+          {
+            className: 'col-md-3',
+          },
+          /*#__PURE__*/ _react.default.createElement(_TagsSidebar.default, null)
+        )
+      )
+    )
   );
 }
 
-export default memo(Home);
+var _default = (0, _react.memo)(Home);
+
+exports.default = _default;

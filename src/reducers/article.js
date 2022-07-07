@@ -1,6 +1,47 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+'use strict';
 
-import agent from '../agent';
+Object.defineProperty(exports, '__esModule', {
+  value: true,
+});
+exports.updateArticle =
+  exports.getArticle =
+  exports.default =
+  exports.createArticle =
+  exports.articlePageUnloaded =
+    void 0;
+
+var _toolkit = require('@reduxjs/toolkit');
+
+var _agent = _interopRequireDefault(require('../agent'));
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule
+    ? obj
+    : {
+        default: obj,
+      };
+}
+
+function _typeof(obj) {
+  '@babel/helpers - typeof';
+
+  return (
+    (_typeof =
+      'function' == typeof Symbol && 'symbol' == typeof Symbol.iterator
+        ? function (obj) {
+            return typeof obj;
+          }
+        : function (obj) {
+            return obj &&
+              'function' == typeof Symbol &&
+              obj.constructor === Symbol &&
+              obj !== Symbol.prototype
+              ? 'symbol'
+              : typeof obj;
+          }),
+    _typeof(obj)
+  );
+}
 
 function serializeError(error) {
   if (error instanceof Error) {
@@ -12,79 +53,82 @@ function serializeError(error) {
     };
   }
 
-  if (typeof error === 'object' && error !== null) {
+  if (_typeof(error) === 'object' && error !== null) {
     return error;
   }
 
-  return { message: String(error) };
+  return {
+    message: String(error),
+  };
 }
 
-export const getArticle = createAsyncThunk(
+var getArticle = (0, _toolkit.createAsyncThunk)(
   'article/getArticle',
-  agent.Articles.get
+  _agent.default.Articles.get
 );
-
-export const createArticle = createAsyncThunk(
+exports.getArticle = getArticle;
+var createArticle = (0, _toolkit.createAsyncThunk)(
   'article/createArticle',
-  agent.Articles.create,
-  { serializeError }
+  _agent.default.Articles.create,
+  {
+    serializeError: serializeError,
+  }
 );
-
-export const updateArticle = createAsyncThunk(
+exports.createArticle = createArticle;
+var updateArticle = (0, _toolkit.createAsyncThunk)(
   'article/updateArticle',
-  agent.Articles.update,
-  { serializeError }
+  _agent.default.Articles.update,
+  {
+    serializeError: serializeError,
+  }
 );
-
-const initialState = {
+exports.updateArticle = updateArticle;
+var initialState = {
   article: undefined,
   inProgress: false,
   errors: undefined,
 };
-
-const articleSlice = createSlice({
+var articleSlice = (0, _toolkit.createSlice)({
   name: 'article',
-  initialState,
+  initialState: initialState,
   reducers: {
-    articlePageUnloaded: () => initialState,
+    articlePageUnloaded: function articlePageUnloaded() {
+      return initialState;
+    },
   },
-  extraReducers: (builder) => {
-    builder.addCase(getArticle.fulfilled, (state, action) => {
+  extraReducers: function extraReducers(builder) {
+    builder.addCase(getArticle.fulfilled, function (state, action) {
       state.article = action.payload.article;
       state.inProgress = false;
     });
-
-    builder.addCase(createArticle.fulfilled, (state) => {
+    builder.addCase(createArticle.fulfilled, function (state) {
       state.inProgress = false;
     });
-
-    builder.addCase(createArticle.rejected, (state, action) => {
+    builder.addCase(createArticle.rejected, function (state, action) {
       state.errors = action.error.errors;
       state.inProgress = false;
     });
-
-    builder.addCase(updateArticle.fulfilled, (state) => {
+    builder.addCase(updateArticle.fulfilled, function (state) {
       state.inProgress = false;
     });
-
-    builder.addCase(updateArticle.rejected, (state, action) => {
+    builder.addCase(updateArticle.rejected, function (state, action) {
       state.errors = action.error.errors;
       state.inProgress = false;
     });
-
     builder.addMatcher(
-      (action) => action.type.endsWith('/pending'),
-      (state) => {
+      function (action) {
+        return action.type.endsWith('/pending');
+      },
+      function (state) {
         state.inProgress = true;
       }
     );
-
-    builder.addDefaultCase((state) => {
+    builder.addDefaultCase(function (state) {
       state.inProgress = false;
     });
   },
 });
-
-export const { articlePageUnloaded } = articleSlice.actions;
-
-export default articleSlice.reducer;
+var articlePageUnloaded = articleSlice.actions.articlePageUnloaded;
+exports.articlePageUnloaded = articlePageUnloaded;
+var _default = articleSlice.reducer;
+exports.default = _default;

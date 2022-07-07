@@ -1,94 +1,108 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+'use strict';
 
-import agent from '../agent';
-import { articlePageUnloaded, createArticle, updateArticle } from './article';
-import { profilePageUnloaded } from './profile';
-import { homePageUnloaded } from './articleList';
-import {
-  getUser,
-  login,
-  logout,
-  register,
-  setToken,
-  updateUser,
-} from '../features/auth/authSlice';
+Object.defineProperty(exports, '__esModule', {
+  value: true,
+});
+exports.deleteArticle =
+  exports.default =
+  exports.clearRedirect =
+  exports.appLoad =
+    void 0;
 
-export const deleteArticle = createAsyncThunk(
+var _toolkit = require('@reduxjs/toolkit');
+
+var _agent = _interopRequireDefault(require('../agent'));
+
+var _article = require('./article');
+
+var _profile = require('./profile');
+
+var _articleList = require('./articleList');
+
+var _authSlice = require('../features/auth/authSlice');
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule
+    ? obj
+    : {
+        default: obj,
+      };
+}
+
+var deleteArticle = (0, _toolkit.createAsyncThunk)(
   'common/deleteArticle',
-  agent.Articles.del
+  _agent.default.Articles.del
 );
+exports.deleteArticle = deleteArticle;
 
-export const appLoad = (token) => (dispatch) => {
-  dispatch(commonSlice.actions.loadApp());
+var appLoad = function appLoad(token) {
+  return function (dispatch) {
+    dispatch(commonSlice.actions.loadApp());
 
-  if (token) {
-    agent.setToken(token);
-    dispatch(setToken(token));
-    return dispatch(getUser());
-  }
+    if (token) {
+      _agent.default.setToken(token);
+
+      dispatch((0, _authSlice.setToken)(token));
+      return dispatch((0, _authSlice.getUser)());
+    }
+  };
 };
 
-const initialState = {
+exports.appLoad = appLoad;
+var initialState = {
   appName: 'Conduit',
   appLoaded: false,
   viewChangeCounter: 0,
   redirectTo: undefined,
 };
-
-const commonSlice = createSlice({
+var commonSlice = (0, _toolkit.createSlice)({
   name: 'common',
-  initialState,
+  initialState: initialState,
   reducers: {
-    loadApp(state) {
+    loadApp: function loadApp(state) {
       state.appLoaded = true;
     },
-    clearRedirect(state) {
+    clearRedirect: function clearRedirect(state) {
       delete state.redirectTo;
     },
   },
-  extraReducers: (builder) => {
-    builder.addCase(deleteArticle.fulfilled, (state) => {
+  extraReducers: function extraReducers(builder) {
+    builder.addCase(deleteArticle.fulfilled, function (state) {
       state.redirectTo = '/';
     });
-
-    builder.addCase(updateUser.fulfilled, (state, action) => {
+    builder.addCase(_authSlice.updateUser.fulfilled, function (state, action) {
       state.redirectTo = '/';
     });
-
-    builder.addCase(login.fulfilled, (state, action) => {
+    builder.addCase(_authSlice.login.fulfilled, function (state, action) {
       state.redirectTo = '/';
     });
-
-    builder.addCase(register.fulfilled, (state, action) => {
+    builder.addCase(_authSlice.register.fulfilled, function (state, action) {
       state.redirectTo = '/';
     });
-
-    builder.addCase(logout, (state) => {
+    builder.addCase(_authSlice.logout, function (state) {
       state.redirectTo = '/';
     });
-
-    builder.addCase(createArticle.fulfilled, (state, action) => {
-      state.redirectTo = `/article/${action.payload.article.slug}`;
+    builder.addCase(_article.createArticle.fulfilled, function (state, action) {
+      state.redirectTo = '/article/'.concat(action.payload.article.slug);
     });
-
-    builder.addCase(updateArticle.fulfilled, (state, action) => {
-      state.redirectTo = `/article/${action.payload.article.slug}`;
+    builder.addCase(_article.updateArticle.fulfilled, function (state, action) {
+      state.redirectTo = '/article/'.concat(action.payload.article.slug);
     });
-
     builder.addMatcher(
-      (action) =>
-        [
-          articlePageUnloaded.type,
-          homePageUnloaded.type,
-          profilePageUnloaded.type,
-        ].includes(action.type),
-      (state) => {
+      function (action) {
+        return [
+          _article.articlePageUnloaded.type,
+          _articleList.homePageUnloaded.type,
+          _profile.profilePageUnloaded.type,
+        ].includes(action.type);
+      },
+      function (state) {
         state.viewChangeCounter++;
       }
     );
   },
 });
-
-export const { clearRedirect } = commonSlice.actions;
-
-export default commonSlice.reducer;
+var clearRedirect = commonSlice.actions.clearRedirect;
+exports.clearRedirect = clearRedirect;
+var _default = commonSlice.reducer;
+exports.default = _default;

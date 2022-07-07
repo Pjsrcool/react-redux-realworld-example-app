@@ -1,21 +1,45 @@
-import agent from '../agent';
-import { login, logout, register } from '../features/auth/authSlice';
+'use strict';
 
-const localStorageMiddleware = (store) => (next) => (action) => {
-  switch (action.type) {
-    case register.fulfilled.type:
-    case login.fulfilled.type:
-      window.localStorage.setItem('jwt', action.payload.token);
-      agent.setToken(action.payload.token);
-      break;
+Object.defineProperty(exports, '__esModule', {
+  value: true,
+});
+exports.localStorageMiddleware = void 0;
 
-    case logout.type:
-      window.localStorage.removeItem('jwt');
-      agent.setToken(undefined);
-      break;
-  }
+var _agent = _interopRequireDefault(require('../agent'));
 
-  return next(action);
+var _authSlice = require('../features/auth/authSlice');
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule
+    ? obj
+    : {
+        default: obj,
+      };
+}
+
+var localStorageMiddleware = function localStorageMiddleware(store) {
+  return function (next) {
+    return function (action) {
+      switch (action.type) {
+        case _authSlice.register.fulfilled.type:
+        case _authSlice.login.fulfilled.type:
+          window.localStorage.setItem('jwt', action.payload.token);
+
+          _agent.default.setToken(action.payload.token);
+
+          break;
+
+        case _authSlice.logout.type:
+          window.localStorage.removeItem('jwt');
+
+          _agent.default.setToken(undefined);
+
+          break;
+      }
+
+      return next(action);
+    };
+  };
 };
 
-export { localStorageMiddleware };
+exports.localStorageMiddleware = localStorageMiddleware;

@@ -1,26 +1,127 @@
-const API_ROOT =
-  process.env.REACT_APP_BACKEND_URL ?? 'https://conduit.productionready.io/api';
+'use strict';
 
+Object.defineProperty(exports, '__esModule', {
+  value: true,
+});
+exports.default = void 0;
+var _excluded = ['slug'];
+
+var _process$env$REACT_AP;
+
+function _objectWithoutProperties(source, excluded) {
+  if (source == null) return {};
+
+  var target = _objectWithoutPropertiesLoose(source, excluded);
+
+  var key, i;
+
+  if (Object.getOwnPropertySymbols) {
+    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+
+    for (i = 0; i < sourceSymbolKeys.length; i++) {
+      key = sourceSymbolKeys[i];
+      if (excluded.indexOf(key) >= 0) continue;
+      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+      target[key] = source[key];
+    }
+  }
+
+  return target;
+}
+
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  return target;
+}
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true,
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+  try {
+    var info = gen[key](arg);
+    var value = info.value;
+  } catch (error) {
+    reject(error);
+    return;
+  }
+
+  if (info.done) {
+    resolve(value);
+  } else {
+    Promise.resolve(value).then(_next, _throw);
+  }
+}
+
+function _asyncToGenerator(fn) {
+  return function () {
+    var self = this,
+      args = arguments;
+    return new Promise(function (resolve, reject) {
+      var gen = fn.apply(self, args);
+
+      function _next(value) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, 'next', value);
+      }
+
+      function _throw(err) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, 'throw', err);
+      }
+
+      _next(undefined);
+    });
+  };
+}
+
+var API_ROOT =
+  (_process$env$REACT_AP = process.env.REACT_APP_BACKEND_URL) !== null &&
+  _process$env$REACT_AP !== void 0
+    ? _process$env$REACT_AP
+    : 'https://conduit.productionready.io/api';
 /**
  * Serialize object to URL params
  *
  * @param {Record<string, unknown>} object
  * @returns {String}
  */
-function serialize(object) {
-  const params = [];
 
-  for (const param in object) {
+function serialize(object) {
+  var params = [];
+
+  for (var param in object) {
     if (Object.hasOwnProperty.call(object, param) && object[param] != null) {
-      params.push(`${param}=${encodeURIComponent(object[param])}`);
+      params.push(
+        ''.concat(param, '=').concat(encodeURIComponent(object[param]))
+      );
     }
   }
 
   return params.join('&');
 }
 
-let token = null;
-
+var token = null;
 /**
  *
  * @typedef {Object} ApiError
@@ -92,43 +193,99 @@ let token = null;
  *
  * @returns {Promise<Object>} API response's body
  */
-const agent = async (url, body, method = 'GET') => {
-  const headers = new Headers();
 
-  if (body) {
-    headers.set('Content-Type', 'application/json');
-  }
+var agent = /*#__PURE__*/ (function () {
+  var _ref = _asyncToGenerator(
+    /*#__PURE__*/ regeneratorRuntime.mark(function _callee(url, body) {
+      var method,
+        headers,
+        response,
+        result,
+        _args = arguments;
+      return regeneratorRuntime.wrap(
+        function _callee$(_context) {
+          while (1) {
+            switch ((_context.prev = _context.next)) {
+              case 0:
+                method =
+                  _args.length > 2 && _args[2] !== undefined ? _args[2] : 'GET';
+                headers = new Headers();
 
-  if (token) {
-    headers.set('Authorization', `Token ${token}`);
-  }
+                if (body) {
+                  headers.set('Content-Type', 'application/json');
+                }
 
-  const response = await fetch(`${API_ROOT}${url}`, {
-    method,
-    headers,
-    body: body ? JSON.stringify(body) : undefined,
-  });
-  let result;
+                if (token) {
+                  headers.set('Authorization', 'Token '.concat(token));
+                }
 
-  try {
-    result = await response.json();
-  } catch (error) {
-    result = { errors: { [response.status]: [response.statusText] } };
-  }
+                _context.next = 6;
+                return fetch(''.concat(API_ROOT).concat(url), {
+                  method: method,
+                  headers: headers,
+                  body: body ? JSON.stringify(body) : undefined,
+                });
 
-  if (!response.ok) throw result;
+              case 6:
+                response = _context.sent;
+                _context.prev = 7;
+                _context.next = 10;
+                return response.json();
 
-  return result;
-};
+              case 10:
+                result = _context.sent;
+                _context.next = 16;
+                break;
 
-const requests = {
+              case 13:
+                _context.prev = 13;
+                _context.t0 = _context['catch'](7);
+                result = {
+                  errors: _defineProperty({}, response.status, [
+                    response.statusText,
+                  ]),
+                };
+
+              case 16:
+                if (response.ok) {
+                  _context.next = 18;
+                  break;
+                }
+
+                throw result;
+
+              case 18:
+                return _context.abrupt('return', result);
+
+              case 19:
+              case 'end':
+                return _context.stop();
+            }
+          }
+        },
+        _callee,
+        null,
+        [[7, 13]]
+      );
+    })
+  );
+
+  return function agent(_x, _x2) {
+    return _ref.apply(this, arguments);
+  };
+})();
+
+var requests = {
   /**
    * Send a DELETE request
    *
    * @param {String} url The endpoint
    * @returns {Promise<Object>}
    */
-  del: (url) => agent(url, undefined, 'DELETE'),
+  del: function del(url) {
+    return agent(url, undefined, 'DELETE');
+  },
+
   /**
    * Send a GET request
    *
@@ -141,16 +298,26 @@ const requests = {
    * @param {String} [query.favorited]
    * @returns {Promise<Object>}
    */
-  get: (url, query = {}) => {
-    if (Number.isSafeInteger(query?.page)) {
+  get: function get(url) {
+    var query =
+      arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+    if (
+      Number.isSafeInteger(
+        query === null || query === void 0 ? void 0 : query.page
+      )
+    ) {
       query.limit = query.limit ? query.limit : 10;
       query.offset = query.page * query.limit;
     }
-    delete query.page;
-    const isEmptyQuery = query == null || Object.keys(query).length === 0;
 
-    return agent(isEmptyQuery ? url : `${url}?${serialize(query)}`);
+    delete query.page;
+    var isEmptyQuery = query == null || Object.keys(query).length === 0;
+    return agent(
+      isEmptyQuery ? url : ''.concat(url, '?').concat(serialize(query))
+    );
   },
+
   /**
    * Send a PUT request
    *
@@ -158,7 +325,10 @@ const requests = {
    * @param {Record<string, unknown>} body The request's body
    * @returns {Promise<Object>}
    */
-  put: (url, body) => agent(url, body, 'PUT'),
+  put: function put(url, body) {
+    return agent(url, body, 'PUT');
+  },
+
   /**
    * Send a POST request
    *
@@ -166,16 +336,20 @@ const requests = {
    * @param {Record<string, unknown>} body The request's body
    * @returns {Promise<Object>}
    */
-  post: (url, body) => agent(url, body, 'POST'),
+  post: function post(url, body) {
+    return agent(url, body, 'POST');
+  },
 };
-
-const Auth = {
+var Auth = {
   /**
    * Get current user
    *
    * @returns {Promise<UserAuth>}
    */
-  current: () => requests.get('/user'),
+  current: function current() {
+    return requests.get('/user');
+  },
+
   /**
    * Login with email and password
    *
@@ -183,8 +357,15 @@ const Auth = {
    * @param {String} password
    * @returns {Promise<UserAuth>}
    */
-  login: (email, password) =>
-    requests.post('/users/login', { user: { email, password } }),
+  login: function login(email, password) {
+    return requests.post('/users/login', {
+      user: {
+        email: email,
+        password: password,
+      },
+    });
+  },
+
   /**
    * Register with username, email and password
    *
@@ -193,8 +374,16 @@ const Auth = {
    * @param {String} password
    * @returns {Promise<UserAuth>}
    */
-  register: (username, email, password) =>
-    requests.post('/users', { user: { username, email, password } }),
+  register: function register(username, email, password) {
+    return requests.post('/users', {
+      user: {
+        username: username,
+        email: email,
+        password: password,
+      },
+    });
+  },
+
   /**
    * Update user
    *
@@ -206,19 +395,23 @@ const Auth = {
    * @param {String} [user.password]
    * @returns {Promise<UserAuth>}
    */
-  save: (user) => requests.put('/user', { user }),
+  save: function save(user) {
+    return requests.put('/user', {
+      user: user,
+    });
+  },
 };
-
-const Tags = {
+var Tags = {
   /**
    * Get all tags
    *
    * @returns {Promise<Tags>}
    */
-  getAll: () => requests.get('/tags'),
+  getAll: function getAll() {
+    return requests.get('/tags');
+  },
 };
-
-const Articles = {
+var Articles = {
   /**
    * Get all articles
    *
@@ -230,7 +423,10 @@ const Articles = {
    * @param {String} [query.favorited]
    * @returns {Promise<ArticlesResponse>}
    */
-  all: (query) => requests.get(`/articles`, query),
+  all: function all(query) {
+    return requests.get('/articles', query);
+  },
+
   /**
    * Get all articles from author
    *
@@ -238,8 +434,14 @@ const Articles = {
    * @param {Number} [page]
    * @returns {Promise<ArticlesResponse>}
    */
-  byAuthor: (author, page) =>
-    requests.get(`/articles`, { author, limit: 5, page }),
+  byAuthor: function byAuthor(author, page) {
+    return requests.get('/articles', {
+      author: author,
+      limit: 5,
+      page: page,
+    });
+  },
+
   /**
    * Get all articles by tag
    *
@@ -247,21 +449,33 @@ const Articles = {
    * @param {Number} page
    * @returns {Promise<ArticlesResponse>}
    */
-  byTag: (tag, page) => requests.get(`/articles`, { tag, page }),
+  byTag: function byTag(tag, page) {
+    return requests.get('/articles', {
+      tag: tag,
+      page: page,
+    });
+  },
+
   /**
    * Remove one article
    *
    * @param {String} slug Article's slug
    * @returns {Promise<{}>}
    */
-  del: (slug) => requests.del(`/articles/${slug}`),
+  del: function del(slug) {
+    return requests.del('/articles/'.concat(slug));
+  },
+
   /**
    * Favorite one article
    *
    * @param {String} slug Article's slug
    * @returns {Promise<ArticleResponse>}
    */
-  favorite: (slug) => requests.post(`/articles/${slug}/favorite`),
+  favorite: function favorite(slug) {
+    return requests.post('/articles/'.concat(slug, '/favorite'));
+  },
+
   /**
    * Get article favorited by author
    *
@@ -269,37 +483,61 @@ const Articles = {
    * @param {Number} [page]
    * @returns {Promise<ArticlesResponse>}
    */
-  favoritedBy: (username, page) =>
-    requests.get(`/articles`, { favorited: username, limit: 5, page }),
+  favoritedBy: function favoritedBy(username, page) {
+    return requests.get('/articles', {
+      favorited: username,
+      limit: 5,
+      page: page,
+    });
+  },
+
   /**
    * Get all articles in the user's feed
    *
    * @param {Number} [page]
    * @returns {Promise<ArticlesResponse>}
    */
-  feed: (page) => requests.get('/articles/feed', { page }),
+  feed: function feed(page) {
+    return requests.get('/articles/feed', {
+      page: page,
+    });
+  },
+
   /**
    * Get one article by slug
    *
    * @param {String} slug Article's slug
    * @returns {Promise<ArticleResponse>}
    */
-  get: (slug) => requests.get(`/articles/${slug}`),
+  get: function get(slug) {
+    return requests.get('/articles/'.concat(slug));
+  },
+
   /**
    * Unfavorite one article
    *
    * @param {String} slug Article's slug
    * @returns {Promise<ArticleResponse>}
    */
-  unfavorite: (slug) => requests.del(`/articles/${slug}/favorite`),
+  unfavorite: function unfavorite(slug) {
+    return requests.del('/articles/'.concat(slug, '/favorite'));
+  },
+
   /**
    * Update one article
    *
    * @param {Partial<Article>} article
    * @returns {Promise<ArticleResponse>}
    */
-  update: ({ slug, ...article }) =>
-    requests.put(`/articles/${slug}`, { article }),
+  update: function update(_ref2) {
+    var slug = _ref2.slug,
+      article = _objectWithoutProperties(_ref2, _excluded);
+
+    return requests.put('/articles/'.concat(slug), {
+      article: article,
+    });
+  },
+
   /**
    * Create a new article
    *
@@ -310,10 +548,13 @@ const Articles = {
    * @param {String[]} article.tagList
    * @returns {Promise<ArticleResponse>}
    */
-  create: (article) => requests.post('/articles', { article }),
+  create: function create(article) {
+    return requests.post('/articles', {
+      article: article,
+    });
+  },
 };
-
-const Comments = {
+var Comments = {
   /**
    * Create a new comment for article
    *
@@ -322,8 +563,12 @@ const Comments = {
    * @param {String} comment.body
    * @returns {Promise<CommentResponse>}
    */
-  create: (slug, comment) =>
-    requests.post(`/articles/${slug}/comments`, { comment }),
+  create: function create(slug, comment) {
+    return requests.post('/articles/'.concat(slug, '/comments'), {
+      comment: comment,
+    });
+  },
+
   /**
    * Remove one comment
    *
@@ -331,48 +576,61 @@ const Comments = {
    * @param {String} commentId Comment's id
    * @returns {Promise<{}>}
    */
-  delete: (slug, commentId) =>
-    requests.del(`/articles/${slug}/comments/${commentId}`),
+  delete: function _delete(slug, commentId) {
+    return requests.del(
+      '/articles/'.concat(slug, '/comments/').concat(commentId)
+    );
+  },
+
   /**
    * Get all comments for one article
    *
    * @param {String} slug Article's slug
    * @returns {Promise<CommentsResponse>}
    */
-  forArticle: (slug) => requests.get(`/articles/${slug}/comments`),
+  forArticle: function forArticle(slug) {
+    return requests.get('/articles/'.concat(slug, '/comments'));
+  },
 };
-
-const Profile = {
+var Profile = {
   /**
    * Follow another user
    *
    * @param {String} username User's username
    * @returns {Profile<ProfileResponse>}
    */
-  follow: (username) => requests.post(`/profiles/${username}/follow`),
+  follow: function follow(username) {
+    return requests.post('/profiles/'.concat(username, '/follow'));
+  },
+
   /**
    * Get the profile of an user
    *
    * @param {String} username User's username
    * @returns {Profile<ProfileResponse>}
    */
-  get: (username) => requests.get(`/profiles/${username}`),
+  get: function get(username) {
+    return requests.get('/profiles/'.concat(username));
+  },
+
   /**
    * Unfollow another user
    *
    * @param {String} username User's username
    * @returns {Profile<ProfileResponse>}
    */
-  unfollow: (username) => requests.del(`/profiles/${username}/follow`),
+  unfollow: function unfollow(username) {
+    return requests.del('/profiles/'.concat(username, '/follow'));
+  },
 };
-
-export default {
-  Articles,
-  Auth,
-  Comments,
-  Profile,
-  Tags,
-  setToken: (_token) => {
+var _default = {
+  Articles: Articles,
+  Auth: Auth,
+  Comments: Comments,
+  Profile: Profile,
+  Tags: Tags,
+  setToken: function setToken(_token) {
     token = _token;
   },
 };
+exports.default = _default;
